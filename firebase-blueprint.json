@@ -1,0 +1,589 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Customer or administrator account profile with wallet balance and RBAC role.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 180 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "photoUrl": { "type": "string", "maxLength": 1000 },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "balance": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "suspended", "blocked"] },
+        "lastTxnId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "email", "role", "balance", "status", "createdAt", "updatedAt"]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized admin & staff registry record used for granular RBAC verification.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 180 },
+        "role": { "type": "string", "enum": ["super_admin", "admin", "manager", "support_staff"] },
+        "status": { "type": "string", "enum": ["active", "revoked"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "status", "createdAt", "updatedAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Social media platform category.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "icon": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "description": { "type": "string", "maxLength": 240 },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "sortOrder": { "type": "number" },
+        "isDemo": { "type": "boolean" }
+      },
+      "required": ["id", "name", "icon", "status", "sortOrder"]
+    },
+    "Service": {
+      "title": "Service",
+      "description": "SMM service package mapped to a category and optional external provider.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "serviceType": { "type": "string", "maxLength": 40 },
+        "description": { "type": "string", "maxLength": 500 },
+        "providerId": { "type": "string", "maxLength": 64 },
+        "providerServiceId": { "type": "string", "maxLength": 64 },
+        "costPrice": { "type": "number" },
+        "sellingPrice": { "type": "number" },
+        "minQuantity": { "type": "number" },
+        "maxQuantity": { "type": "number" },
+        "averageTime": { "type": "string", "maxLength": 64 },
+        "deliverySpeed": { "type": "string", "maxLength": 64 },
+        "refillGuaranteed": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "isDemo": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "categoryId",
+        "name",
+        "costPrice",
+        "sellingPrice",
+        "minQuantity",
+        "maxQuantity",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer SMM order with server-protected pricing, status tracking, retry metadata, and provider fields.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "serviceId": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "serviceName": { "type": "string", "maxLength": 160 },
+        "categoryId": { "type": "string", "maxLength": 64 },
+        "providerId": { "type": "string", "maxLength": 64 },
+        "providerOrderId": { "type": "string", "maxLength": 128 },
+        "providerCharge": { "type": "number" },
+        "link": { "type": "string", "minLength": 5, "maxLength": 500 },
+        "quantity": { "type": "number" },
+        "charge": { "type": "number" },
+        "status": { "type": "string", "enum": ["Pending", "Processing", "In Progress", "Completed", "Partial", "Canceled", "Cancelled", "Failed"] },
+        "remains": { "type": "number" },
+        "startCount": { "type": "number" },
+        "paymentStatus": { "type": "string", "enum": ["paid", "refunded"] },
+        "paymentTransactionId": { "type": "string", "maxLength": 128 },
+        "refunded": { "type": "boolean" },
+        "refundEligible": { "type": "boolean" },
+        "refundedAt": { "type": "string", "format": "date-time" },
+        "refundedBy": { "type": "string", "maxLength": 128 },
+        "refundTransactionId": { "type": "string", "maxLength": 128 },
+        "lastCheckedAt": { "type": "string", "format": "date-time" },
+        "completedAt": { "type": "string", "format": "date-time" },
+        "retryCount": { "type": "number" },
+        "lastAttemptAt": { "type": "string", "format": "date-time" },
+        "lastError": { "type": "string", "maxLength": 500 },
+        "nextRetryAt": { "type": "string", "format": "date-time" },
+        "internalNote": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "serviceId", "link", "quantity", "charge", "status", "createdAt", "updatedAt"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Customer fund deposit request and admin verification record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "paymentId": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userName": { "type": "string", "maxLength": 120 },
+        "amount": { "type": "number" },
+        "method": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "paymentMethod": { "type": "string", "maxLength": 64 },
+        "transactionId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "cancelled", "Pending", "Approved", "Rejected", "Completed", "Failed"] },
+        "adminNote": { "type": "string", "maxLength": 500 },
+        "reviewedBy": { "type": "string", "maxLength": 128 },
+        "reviewedAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "amount", "method", "transactionId", "status", "createdAt"]
+    },
+    "PaymentMethod": {
+      "title": "PaymentMethod",
+      "description": "Admin-managed deposit payment method configuration.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "type": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "accountNumber": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "instructions": { "type": "string", "minLength": 1, "maxLength": 1500 },
+        "note": { "type": "string", "maxLength": 120 },
+        "minAmount": { "type": "number" },
+        "maxAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "displayOrder": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "type", "accountNumber", "instructions", "minAmount", "maxAmount", "status", "displayOrder", "createdAt", "updatedAt"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Immutable wallet ledger entry recording balance changes.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "transactionId": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "type": { "type": "string", "enum": ["deposit", "order", "order_payment", "refund", "admin_credit", "admin_debit", "adjustment"] },
+        "amount": { "type": "number" },
+        "balanceBefore": { "type": "number" },
+        "balanceAfter": { "type": "number" },
+        "reference": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "referenceId": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 300 },
+        "reason": { "type": "string", "maxLength": 300 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "adminId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "type", "amount", "balanceBefore", "balanceAfter", "reference", "createdAt"]
+    },
+    "ApiProvider": {
+      "title": "ApiProvider",
+      "description": "Admin-only external SMM provider credentials and endpoint settings.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "apiUrl": { "type": "string", "minLength": 8, "maxLength": 300 },
+        "apiKey": { "type": "string", "maxLength": 256 },
+        "providerFormat": { "type": "string", "maxLength": 40 },
+        "lastBalance": { "type": "number" },
+        "lastBalanceCurrency": { "type": "string", "maxLength": 16 },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "apiUrl", "apiKey", "status", "createdAt", "updatedAt"]
+    },
+    "SystemSettings": {
+      "title": "SystemSettings",
+      "description": "Global platform white-label settings, landing page customization, installation metadata, and setup status.",
+      "type": "object",
+      "properties": {
+        "websiteName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "websiteDescription": { "type": "string", "maxLength": 500 },
+        "brandTagline": { "type": "string", "maxLength": 80 },
+        "logo": { "type": "string", "maxLength": 500 },
+        "favicon": { "type": "string", "maxLength": 500 },
+        "theme": { "type": "string", "maxLength": 64 },
+        "themeColor": { "type": "string", "maxLength": 32 },
+        "secondaryColor": { "type": "string", "maxLength": 32 },
+        "currency": { "type": "string", "minLength": 1, "maxLength": 16 },
+        "currencySymbol": { "type": "string", "minLength": 1, "maxLength": 8 },
+        "defaultProfitMargin": { "type": "number" },
+        "autoSyncEnabled": { "type": "boolean" },
+        "supportEmail": { "type": "string", "maxLength": 180 },
+        "supportWhatsapp": { "type": "string", "maxLength": 64 },
+        "supportHours": { "type": "string", "maxLength": 80 },
+        "footerText": { "type": "string", "maxLength": 240 },
+        "socialLinks": { "type": "object" },
+        "heroTitle": { "type": "string", "maxLength": 140 },
+        "heroSubtitle": { "type": "string", "maxLength": 200 },
+        "heroDescription": { "type": "string", "maxLength": 500 },
+        "heroCtaLabel": { "type": "string", "maxLength": 60 },
+        "aboutTitle": { "type": "string", "maxLength": 140 },
+        "aboutDescription": { "type": "string", "maxLength": 800 },
+        "landingFeatures": { "type": "array" },
+        "howItWorks": { "type": "array" },
+        "landingFaqs": { "type": "array" },
+        "maintenanceMode": { "type": "boolean" },
+        "databaseInitialized": { "type": "boolean" },
+        "setupCompleted": { "type": "boolean" },
+        "brandingConfigured": { "type": "boolean" },
+        "providerConfigured": { "type": "boolean" },
+        "paymentConfigured": { "type": "boolean" },
+        "productionMode": { "type": "boolean" },
+        "demoDataEnabled": { "type": "boolean" },
+        "installationId": { "type": "string", "maxLength": 40 },
+        "appVersion": { "type": "string", "maxLength": 24 },
+        "schemaVersion": { "type": "string", "maxLength": 32 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["websiteName", "currency", "maintenanceMode", "updatedAt"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "description": "Customer support inquiry ticket with category, order reference, and conversation state.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "category": { "type": "string", "maxLength": 60 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "orderReference": { "type": "string", "maxLength": 64 },
+        "attachmentUrl": { "type": "string", "maxLength": 500 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "adminReply": { "type": "string", "maxLength": 2000 },
+        "repliedBy": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["Open", "Pending", "In Progress", "Waiting for Customer", "Answered", "Resolved", "Closed"] },
+        "priority": { "type": "string", "enum": ["Low", "Medium", "High"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "subject", "message", "status", "priority", "createdAt", "updatedAt"]
+    },
+    "TicketMessage": {
+      "title": "TicketMessage",
+      "description": "Chronological chat message inside a support ticket.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "messageId": { "type": "string", "maxLength": 64 },
+        "ticketId": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "senderId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "senderName": { "type": "string", "maxLength": 120 },
+        "senderRole": { "type": "string", "enum": ["user", "admin"] },
+        "message": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "readAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "ticketId", "senderId", "senderRole", "message", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User-scoped or broadcast order, payment, refund, support, or system notification.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "notificationId": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "targetType": { "type": "string", "enum": ["user", "all"] },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "type": {
+          "type": "string",
+          "enum": [
+            "order",
+            "wallet",
+            "support",
+            "system",
+            "order_created",
+            "order_processing",
+            "order_completed",
+            "order_partial",
+            "order_failed",
+            "payment_approved",
+            "payment_rejected",
+            "refund",
+            "support_reply"
+          ]
+        },
+        "referenceId": { "type": "string", "maxLength": 128 },
+        "read": { "type": "boolean" },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "message", "type", "read", "createdAt"]
+    },
+    "AdminNotification": {
+      "title": "AdminNotification",
+      "description": "Admin-only system and event alert (new users, payments, orders, tickets, provider errors).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "type": { "type": "string", "enum": ["new_user", "new_payment", "new_order", "new_ticket", "failed_provider_api", "system_error"] },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "referenceId": { "type": "string", "maxLength": 128 },
+        "actorUid": { "type": "string", "maxLength": 128 },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "type", "title", "message", "read", "createdAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable admin audit log entry for sensitive state and financial mutations.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "action": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "adminId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "targetId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "targetType": { "type": "string", "enum": ["order", "ticket", "user", "payment", "provider", "system", "api_gateway"] },
+        "previousValue": { "type": "string", "maxLength": 500 },
+        "newValue": { "type": "string", "maxLength": 500 },
+        "note": { "type": "string", "maxLength": 300 },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "action", "adminId", "targetId", "targetType", "previousValue", "newValue", "timestamp"]
+    },
+    "ApiCustomer": {
+      "title": "ApiCustomer",
+      "description": "Reseller API customer account with isolated API wallet, discount tier, and rate limit.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 180 },
+        "companyName": { "type": "string", "maxLength": 120 },
+        "websiteDomain": { "type": "string", "maxLength": 200 },
+        "installationId": { "type": "string", "maxLength": 64 },
+        "apiBalance": { "type": "number" },
+        "totalSpent": { "type": "number" },
+        "totalOrders": { "type": "number" },
+        "rateLimitPerMinute": { "type": "number" },
+        "customDiscountPercent": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "suspended", "revoked"] },
+        "note": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "email", "installationId", "apiBalance", "rateLimitPerMinute", "status", "createdAt", "updatedAt"]
+    },
+    "ApiKey": {
+      "title": "ApiKey",
+      "description": "Hashed public API key credential for server-side authentication (plaintext never persisted).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "customerId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "installationId": { "type": "string", "maxLength": 64 },
+        "label": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "keyPrefix": { "type": "string", "minLength": 4, "maxLength": 24 },
+        "keyLast4": { "type": "string", "minLength": 4, "maxLength": 4 },
+        "keyHash": { "type": "string", "minLength": 64, "maxLength": 128 },
+        "permissions": { "type": "array" },
+        "rateLimitPerMinute": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "disabled", "revoked"] },
+        "requestCount": { "type": "number" },
+        "lastUsedAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "customerId", "label", "keyPrefix", "keyLast4", "keyHash", "permissions", "rateLimitPerMinute", "status", "createdAt", "updatedAt"]
+    },
+    "ApiOrder": {
+      "title": "ApiOrder",
+      "description": "Customer-facing API Gateway order record isolating internal/upstream provider identifiers.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "internalOrderId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "customerId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "keyId": { "type": "string", "maxLength": 64 },
+        "installationId": { "type": "string", "maxLength": 64 },
+        "idempotencyKey": { "type": "string", "maxLength": 128 },
+        "serviceId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "serviceName": { "type": "string", "maxLength": 160 },
+        "link": { "type": "string", "minLength": 5, "maxLength": 500 },
+        "quantity": { "type": "number" },
+        "charge": { "type": "number" },
+        "status": { "type": "string", "enum": ["Pending", "Processing", "In Progress", "Completed", "Partial", "Canceled", "Cancelled", "Failed"] },
+        "startCount": { "type": "number" },
+        "remains": { "type": "number" },
+        "refunded": { "type": "boolean" },
+        "refundTransactionId": { "type": "string", "maxLength": 128 },
+        "providerDispatched": { "type": "boolean" },
+        "errorMessage": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "internalOrderId", "customerId", "serviceId", "link", "quantity", "charge", "status", "createdAt", "updatedAt"]
+    },
+    "ApiTransaction": {
+      "title": "ApiTransaction",
+      "description": "Immutable API Customer balance ledger.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "customerId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["credit", "debit", "order_charge", "refund", "adjustment"] },
+        "amount": { "type": "number" },
+        "balanceBefore": { "type": "number" },
+        "balanceAfter": { "type": "number" },
+        "referenceId": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 300 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "customerId", "type", "amount", "balanceBefore", "balanceAfter", "referenceId", "createdAt"]
+    },
+    "ApiRequestLog": {
+      "title": "ApiRequestLog",
+      "description": "Audit and telemetry log of inbound Public API Gateway calls.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "customerId": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "keyId": { "type": "string", "maxLength": 64 },
+        "installationId": { "type": "string", "maxLength": 64 },
+        "action": { "type": "string", "maxLength": 40 },
+        "httpStatus": { "type": "number" },
+        "success": { "type": "boolean" },
+        "latencyMs": { "type": "number" },
+        "ipAddress": { "type": "string", "maxLength": 64 },
+        "idempotencyKey": { "type": "string", "maxLength": 128 },
+        "errorMessage": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "action", "httpStatus", "success", "createdAt"]
+    },
+    "WebsiteInstallation": {
+      "title": "WebsiteInstallation",
+      "description": "Registry of connected reseller websites and panels using the Supartha Panel Reseller API.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "installationId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "customerId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "buyerName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "domain": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "appVersion": { "type": "string", "maxLength": 24 },
+        "apiLocked": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["active", "suspended", "revoked"] },
+        "note": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "installationId", "customerId", "buyerName", "domain", "apiLocked", "status", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User account profiles and balances (PII strictly owner/admin only)."
+    },
+    "/adminUsers/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Authorized admin accounts for RBAC checks."
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Public/customer-readable SMM platform categories; admin write-only."
+    },
+    "/services/{serviceId}": {
+      "schema": { "$ref": "#/entities/Service" },
+      "description": "Public/customer-readable SMM services catalog; admin write-only."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer SMM orders; users may create pending orders and read their own orders."
+    },
+    "/payments/{paymentId}": {
+      "schema": { "$ref": "#/entities/Payment" },
+      "description": "Customer payment records; users read own payments, admins manage approvals."
+    },
+    "/paymentMethods/{methodId}": {
+      "schema": { "$ref": "#/entities/PaymentMethod" },
+      "description": "Active deposit payment methods readable by customers; admin write-only."
+    },
+    "/transactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "Customer wallet transaction ledger; read-only for owner, atomic write for order payment/admin."
+    },
+    "/apiProviders/{providerId}": {
+      "schema": { "$ref": "#/entities/ApiProvider" },
+      "description": "Admin-only external SMM provider credentials."
+    },
+    "/apiCustomers/{customerId}": {
+      "schema": { "$ref": "#/entities/ApiCustomer" },
+      "description": "Supartha Panel API Gateway customer accounts and API balances."
+    },
+    "/apiKeys/{keyId}": {
+      "schema": { "$ref": "#/entities/ApiKey" },
+      "description": "Hashed API key credentials for Supartha Panel Public API."
+    },
+    "/apiOrders/{apiOrderId}": {
+      "schema": { "$ref": "#/entities/ApiOrder" },
+      "description": "API Gateway orders isolating upstream provider metadata."
+    },
+    "/apiTransactions/{txnId}": {
+      "schema": { "$ref": "#/entities/ApiTransaction" },
+      "description": "Immutable API Customer balance ledger."
+    },
+    "/apiRequestLogs/{logId}": {
+      "schema": { "$ref": "#/entities/ApiRequestLog" },
+      "description": "Public API Gateway request logs and rate-limit telemetry."
+    },
+    "/websiteInstallations/{installationId}": {
+      "schema": { "$ref": "#/entities/WebsiteInstallation" },
+      "description": "Sold buyer website installations locked to Supartha Panel API."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/SystemSettings" },
+      "description": "Platform white-label settings (publicBrand readable, admin-only secrets/config)."
+    },
+    "/supportTickets/{ticketId}": {
+      "schema": { "$ref": "#/entities/SupportTicket" },
+      "description": "Customer support tickets; owner and admin access."
+    },
+    "/supportTickets/{ticketId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/TicketMessage" },
+      "description": "Customer and admin conversation messages under a support ticket."
+    },
+    "/supportTickets/{ticketId}/replies/{replyId}": {
+      "schema": { "$ref": "#/entities/TicketMessage" },
+      "description": "Legacy subcollection alias for customer and admin conversation replies."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "User notifications; owner can read and mark read."
+    },
+    "/adminNotifications/{notifId}": {
+      "schema": { "$ref": "#/entities/AdminNotification" },
+      "description": "Admin-only system event alerts."
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Immutable admin audit log records."
+    }
+  }
+}

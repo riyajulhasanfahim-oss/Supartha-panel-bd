@@ -1,0 +1,8 @@
+{
+  "name": "Remix RJ WORLD BD — SMM Panel",
+  "description": "Modern, mobile-first Social Media Marketing (SMM) Panel platform for social growth, order management, and digital services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

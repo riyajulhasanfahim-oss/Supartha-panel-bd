@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="dvp-bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6D28D9" />
+      <stop offset="55%" stop-color="#5B21B6" />
+      <stop offset="100%" stop-color="#4338CA" />
+    </linearGradient>
+    <linearGradient id="dvp-gold" x1="180" y1="120" x2="410" y2="390" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#dvp-bg)" />
+  <circle cx="384" cy="128" r="74" fill="#FFFFFF" fill-opacity="0.08" />
+  <circle cx="132" cy="390" r="88" fill="#A78BFA" fill-opacity="0.1" />
+  <g transform="translate(56, 56) scale(11.1111)">
+    <!-- Bold stylized D monogram for Dukhu -->
+    <path
+      d="M7.5 8.5H15.2C20.9 8.5 24.4 11.9 24.4 18C24.4 24.1 20.9 27.5 15.2 27.5H7.5V8.5ZM12.3 12.9V23.1H15C18.1 23.1 19.6 21.3 19.6 18C19.6 14.7 18.1 12.9 15 12.9H12.3Z"
+      fill="#FFFFFF"
+    />
+    <!-- Vibes pulse wave + spark accent -->
+    <path
+      d="M17.5 18.2H20.4L22.2 14.2L24.5 22.1L26.7 16.3L28.3 18.2H30.5"
+      stroke="url(#dvp-gold)"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M27.2 7.5L28.1 10.1L30.7 11L28.1 11.9L27.2 14.5L26.3 11.9L23.7 11L26.3 10.1L27.2 7.5Z"
+      fill="#FDE047"
+    />
+  </g>
+</svg>
