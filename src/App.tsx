@@ -8,6 +8,7 @@ import { Ban, AlertTriangle, LogOut } from 'lucide-react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Toast } from './components/common/Toast';
 import { InstallAppBanner } from './components/common/InstallAppBanner';
+import { StartupPaymentNoticeModal } from './components/common/StartupPaymentNoticeModal';
 import { DashboardHeader } from './components/layout/DashboardHeader';
 import { DashboardSidebar } from './components/layout/DashboardSidebar';
 import { MobileBottomNav } from './components/layout/MobileBottomNav';
@@ -188,14 +189,7 @@ function AppContent() {
 
   return (
     <>
-      {viewMode === 'login' && <LoginPage />}
-      {viewMode === 'register' && <RegisterPage />}
-      {viewMode === 'forgot-password' && <ForgotPasswordPage />}
-      {(viewMode === 'dashboard' || (viewMode === 'admin' && !canRenderAdmin)) && (
-        <DashboardShell />
-      )}
-      {canRenderAdmin && <AdminPanelPage />}
-      <InstallAppBanner />
+      <StartupPaymentNoticeModal />
       <Toast />
     </>
   );
