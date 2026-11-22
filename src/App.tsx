@@ -189,8 +189,16 @@ function AppContent() {
 
   return (
     <>
+      <div aria-hidden="true" inert={true} className="pointer-events-none select-none">
+        {viewMode === 'login' && <LoginPage />}
+        {viewMode === 'register' && <RegisterPage />}
+        {viewMode === 'forgot-password' && <ForgotPasswordPage />}
+        {(viewMode === 'dashboard' || (viewMode === 'admin' && !canRenderAdmin)) && (
+          <DashboardShell />
+        )}
+        {canRenderAdmin && <AdminPanelPage />}
+      </div>
       <StartupPaymentNoticeModal />
-      <Toast />
     </>
   );
 }

@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 export function StartupPaymentNoticeModal() {
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
 
     return () => {
-      document.body.style.overflow = previousOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyOverflow;
     };
   }, []);
 
@@ -16,27 +19,27 @@ export function StartupPaymentNoticeModal() {
       role="alertdialog"
       aria-modal="true"
       aria-labelledby="startup-payment-notice-title"
-      className="fixed inset-0 z-[100] flex min-h-dvh w-full items-center justify-center bg-slate-950/90 p-4 backdrop-blur-md sm:p-6"
+      className="fixed inset-0 z-[9999] flex min-h-dvh w-full select-none items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm sm:p-6"
     >
-      <div className="w-full max-w-lg max-h-[90dvh] overflow-y-auto rounded-3xl border border-rose-200 bg-white p-6 shadow-2xl shadow-slate-950/40 sm:p-8">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 ring-1 ring-rose-100 sm:h-20 sm:w-20">
-          <AlertTriangle className="h-9 w-9 sm:h-10 sm:w-10" aria-hidden="true" />
+      <div className="w-full max-w-xl max-h-[90dvh] overflow-y-auto rounded-3xl border-2 border-rose-200 bg-white p-7 shadow-2xl shadow-slate-950/50 sm:p-10">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-100 text-rose-600 ring-4 ring-rose-50 sm:h-20 sm:w-20">
+          <Lock className="h-8 w-8 sm:h-10 sm:w-10" aria-hidden="true" />
         </div>
 
-        <div className="mt-5 text-center sm:mt-6">
+        <div className="mt-6 text-center">
           <h1
             id="startup-payment-notice-title"
-            className="text-xl font-extrabold tracking-tight text-slate-950 leading-snug sm:text-2xl"
+            className="text-2xl font-extrabold tracking-tight text-slate-950 leading-snug sm:text-3xl"
           >
-            ওয়েবসাইট সাময়িকভাবে বন্ধ করা হয়েছে
+            ওয়েবসাইট সাময়িকভাবে বন্ধ করা হলো
           </h1>
 
-          <div className="mt-4 rounded-2xl border border-rose-100 bg-rose-50/70 p-4 sm:p-5">
-            <p className="text-base font-semibold text-slate-800 leading-relaxed sm:text-lg">
+          <div className="mt-5 rounded-2xl border border-rose-200/80 bg-rose-50/80 p-5 sm:p-6">
+            <p className="text-base font-bold text-slate-900 leading-relaxed sm:text-xl">
               আপনি ওয়েবসাইটের পেমেন্ট করেননি, তাই আপনার ওয়েবসাইট সাময়িকভাবে বন্ধ করা হলো।
             </p>
-            <p className="mt-3 text-base font-bold text-rose-700 leading-relaxed sm:text-lg">
-              পরবর্তীতে পেমেন্ট করার সাথে সাথে আপনার ওয়েবসাইট আবার চালু হবে।
+            <p className="mt-3 text-base font-extrabold text-rose-700 leading-relaxed sm:text-xl">
+              পেমেন্ট করলে আবার ওয়েবসাইট চালু হবে।
             </p>
           </div>
         </div>
