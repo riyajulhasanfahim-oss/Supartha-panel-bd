@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
-import { Lock } from 'lucide-react';
+import { Lock, MessageCircle } from 'lucide-react';
+
+const DEVELOPER_WHATSAPP_URL = 'https://wa.me/8801884267928';
+const DEVELOPER_WHATSAPP_DISPLAY = '01884267928';
 
 export function StartupPaymentNoticeModal() {
   useEffect(() => {
@@ -41,6 +44,21 @@ export function StartupPaymentNoticeModal() {
             <p className="mt-3 text-base font-extrabold text-rose-700 leading-relaxed sm:text-xl">
               পেমেন্ট করলে আবার ওয়েবসাইট চালু হবে।
             </p>
+          </div>
+
+          <div className="mt-6">
+            <p className="text-sm font-semibold text-slate-600">
+              ডেভলপার যোগাযোগ (WhatsApp)
+            </p>
+            <a
+              href={DEVELOPER_WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2.5 inline-flex w-full items-center justify-center gap-2.5 rounded-2xl bg-emerald-600 px-5 py-3.5 text-base font-bold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700 active:scale-[0.99] sm:w-auto sm:min-w-[260px]"
+            >
+              <MessageCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
+              <span>ডেভলপার WhatsApp: {DEVELOPER_WHATSAPP_DISPLAY}</span>
+            </a>
           </div>
         </div>
       </div>
