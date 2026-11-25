@@ -31,12 +31,12 @@ export function StartupPaymentNoticeModal() {
             id="startup-payment-notice-title"
             className="text-2xl font-extrabold tracking-tight text-slate-950 leading-snug sm:text-3xl"
           >
-            ওয়েবসাইট সাময়িকভাবে বন্ধ করা হলো
+            এপস সাময়িকভাবে বন্ধ করা হলো
           </h1>
 
           <div className="mt-5 rounded-2xl border border-rose-200/80 bg-rose-50/80 p-5 sm:p-6">
             <p className="text-base font-bold text-slate-900 leading-relaxed sm:text-xl">
-              আপনি ওয়েবসাইটের পেমেন্ট করেননি, তাই আপনার ওয়েবসাইট সাময়িকভাবে বন্ধ করা হলো।
+              আপনি ডেভলপার এর সাথে প্রতারণা করে নিয়েছেন অ্যাপসটা আপনি এপস এর পেমেন্ট করেননি, তাই আপনার এপস সাময়িকভাবে বন্ধ করা হলো।
             </p>
             <p className="mt-3 text-base font-extrabold text-rose-700 leading-relaxed sm:text-xl">
               পেমেন্ট করলে আবার ওয়েবসাইট চালু হবে।
